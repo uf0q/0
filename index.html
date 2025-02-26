@@ -1,198 +1,160 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>منصة الألعاب - XO و UNO و Dots & Boxes</title>
-  <!-- خط Roboto المستخدم في الموقع الأساسي -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <!-- إضافة Font Awesome (مطلوب للعبة برا السالفة) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>منصة الألعاب - L3BHA</title>
+  <!-- الخطوط والأيقونات -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
   <style>
-    /* ------------------ أنماط الموقع الأساسي ------------------ */
+    /* أنماط الموقع العامة */
     :root {
       --primary: #2c3e50;
       --secondary: #3498db;
       --success: #2ecc71;
       --danger: #e74c3c;
       --text: #333;
-      --background: #f4f4f4;
+      --background: #1b568d9a;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Roboto', sans-serif;
       background: var(--background);
       color: var(--text);
-      display: flex;
-      min-height: 100vh;
-      direction: rtl;
+      overflow: hidden;
     }
-    /* القائمة الجانبية */
-    .sidebar {
-      width: 250px;
-      background: var(--primary);
-      color: white;
-      padding: 20px;
-      position: fixed;
-      height: 100vh;
-      top: 0;
-      right: 0;
-    }
-    .sidebar h2 {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    .sidebar ul { list-style: none; }
-    .sidebar li { margin: 15px 0; }
-    .sidebar a {
-      color: white;
-      text-decoration: none;
-      display: block;
-      padding: 10px;
-      border-radius: 5px;
-      transition: background 0.3s;
-    }
-    .sidebar a:hover { background: rgba(255,255,255,0.1); }
-    /* المحتوى الرئيسي */
-    .main-content {
-      margin-right: 250px;
-      padding: 30px;
-      flex: 1;
-    }
-    .game-container { display: none; }
-    .game-container.active { display: block; }
     
-    /* أنماط لعبة XO */
-    .container {
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 0 15px;
-    }
-    header.xo-header {
-      background: linear-gradient(135deg, #2c3e50, #3498db);
-      color: #fff;
-      padding: 20px;
-      text-align: center;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-    header.xo-header h1 { margin: 0; font-size: 2.5em; }
-    #scoreboard {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      background: #34495e;
-      color: white;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      text-align: center;
-      font-size: 1.2em;
-      margin-bottom: 20px;
-    }
-    #gameOptions {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    #gameOptions label { margin-right: 5px; }
-    #gameOptions select {
-      padding: 5px;
-      font-size: 1em;
-      margin: 0 10px;
-    }
-    #status { text-align: center; font-size: 1.5em; margin-bottom: 20px; }
-    .board {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 5px;
-      background: #424852;
-      padding: 5px;
-      border-radius: 10px;
-      max-width: 320px;
-      margin: 0 auto 20px;
-    }
-    .cell {
-      background: #ecf0f1;
-      height: 100px;
-      font-size: 3.5em;
+    /* ===================== شاشات الانميشن التمهيدية ===================== */
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #1a4f39;
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      color: #2c3e50;
-      border-radius: 5px;
+      z-index: 2000;
+      transition: opacity 1s;
     }
-    .cell:hover {
-      background: #bdc3c7;
-      transform: rotate(3deg) scale(1.1);
-    }
-    .cell.taken { cursor: not-allowed; }
-    .cell.winning { background: #2ecc71; color: white; }
-    .buttons {
+    /* شاشة الترحيب */
+    #welcomeOverlay .welcome-content {
       text-align: center;
+    }
+    #welcomeOverlay h1 {
+      font-size: 3em;
+      color: #fff;
+    }
+    /* شاشة اختيار الألعاب */
+    #gamesOverlay .games-content {
+      position: relative;
+      text-align: center;
+    }
+    #gamesOverlay .games-header {
       margin-bottom: 30px;
     }
-    .buttons button {
-      padding: 10px 20px;
+    #gamesOverlay h1 {
+      font-size: 3em;
+      margin: 0;
+      color: #fff;
+    }
+    /* أيقونة الكنترولر الكبيرة في الخلفية لشاشة الاختيار */
+    #gamesOverlay::before {
+      content: "\f11b";
+      font-family: "Font Awesome 6 Free"; 
+      font-weight: 900;
+      font-size: 200px;
+      position: absolute;
+      opacity: 0.1;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    /* قائمة الألعاب: تعديل مستطيل اختيار الألعاب */
+    .games-menu {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .game-option {
+      background: #1f3738;               /* الخلفية المطلوبة */
+      border: 2px solid #030207;         /* حدود المستطيل */
+      border-radius: 5px;
+      cursor: pointer;
       font-size: 1em;
-      margin: 5px;
+      transition: transform 0.3s, background 0.3s, color 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      width: 140px;
+      height: 80px;
+      color: #11c1a7;                    /* اللون المطلوب للنص والأيقونات */
+    }
+    .game-option i {
+      font-size: 1.5em;
+      color: #11c1a7;
+    }
+    .game-option span {
+      font-size: 0.8em;
+      color: #11c1a7;
+    }
+    .game-option:hover {
+      transform: scale(1.1);
+      background: #1f3738;
+      color: #11c1a7;
+      border-color: #030207;
+    }
+    
+    /* زر العودة للقائمة */
+    #returnButton {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 50px;
+      height: 50px;
+      background: var(--secondary);
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    .buttons button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 8px rgba(0,0,0,0.2);
-    }
-    .btn-new { background: #3498db; color: #fff; }
-    .btn-reset { background: #e74c3c; color: #fff; }
-    .overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 2100;
+      transition: opacity 1s;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 3em;
-      z-index: 1000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.5s ease;
     }
-    .overlay.active {
-      opacity: 1;
-      pointer-events: all;
-    }
-    .overlay.win {
-      background: rgba(46, 204, 113, 0.9);
-      color: white;
-      animation: animateOverlay 2s ease;
-    }
-    .overlay.lose {
-      background: rgba(231, 76, 60, 0.9);
-      color: white;
-      animation: animateOverlay 2s ease;
-    }
-    .overlay.draw {
-      background: rgba(255, 165, 0, 0.9);
-      color: white;
-      animation: animateOverlay 2s ease;
-    }
-    @keyframes animateOverlay {
-      0% { transform: scale(0.5); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
-    @keyframes cellPop {
-      0% { transform: scale(0); }
-      90% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
-    .cell:not(.taken) { animation: cellPop 0.3s ease; }
+    #returnButton i { font-size: 1.5em; color: #fff; }
     
-    /* أنماط لعبة UNO */
+    /* ===================== أنماط المحتوى الرئيسي ===================== */
+    .main-content {
+      display: none;
+      padding: 30px;
+      overflow-y: auto;
+    }
+    .game-section { display: none; }
+    
+    /* ===================== كود لعبة UNO الجديد ===================== */
+    @font-face {
+      font-family: 'ARA HAMAH ALFIDAA';
+      src: url('ARA_HAMAH_ALFIDAA.woff2') format('woff2');
+    }
+    /* قسم UNO */
+    #uno {
+      position: relative;
+      overflow: hidden;
+    }
+    #background-shapes {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .game-container { position: relative; z-index: 1; }
     #uno-settings {
       max-width: 500px;
       margin: 0 auto 20px;
@@ -201,7 +163,21 @@
       background: #eee;
       border-radius: 8px;
     }
-    #uno-settings label { margin: 0 5px; font-size: 1em; }
+    #mode-options { margin-bottom: 15px; }
+    #mode-options .mode-option {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 5px;
+      border: 2px solid var(--secondary);
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    #mode-options .mode-option.active {
+      background-color: var(--secondary);
+      color: white;
+    }
+    #mode-options input[type="radio"] { display: none; }
     #uno-settings select,
     #uno-settings button {
       margin: 10px 0;
@@ -219,7 +195,6 @@
       cursor: pointer;
     }
     #uno-back:hover { opacity: 0.9; }
-    /* ترتيب لعبة UNO مع سحب الأوراق في الوسط */
     #uno-hands {
       display: flex;
       justify-content: space-around;
@@ -236,9 +211,7 @@
       justify-content: center;
     }
     #uno-deck-center > #uno-deck,
-    #uno-deck-center > #uno-discard {
-      margin-bottom: 20px;
-    }
+    #uno-deck-center > #uno-discard { margin-bottom: 20px; }
     #discard-pile {
       margin: auto;
       width: 80px;
@@ -261,11 +234,12 @@
       justify-content: center;
       font-weight: bold;
       cursor: pointer;
+      font-family: 'ARA HAMAH ALFIDAA', sans-serif;
       background: linear-gradient(145deg, #ffffff, #dcdcdc);
-      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
-      border: 1px solid #bbb;
+      border: 3px solid black;
       position: relative;
       font-size: 1.5em;
+      transition: transform 0.3s ease;
     }
     .uno-card::before {
       content: "";
@@ -278,12 +252,114 @@
       border-top-left-radius: 10px;
       border-top-right-radius: 10px;
     }
-    .red { background: linear-gradient(145deg, #ff8a80, #ff5252); color: white; }
-    .blue { background: linear-gradient(145deg, #82b1ff, #448aff); color: white; }
-    .green { background: linear-gradient(145deg, #b9f6ca, #69f0ae); color: white; }
-    .yellow { background: linear-gradient(145deg, #ffff8d, #ffea00); color: black; }
+    .red { background: #ff3131; color: white; }
+    .blue { background: #38b6ff; color: white; }
+    .green { background: #82e100; color: white; }
+    .yellow { background: #f6db12; color: black; }
+    .wild { background: linear-gradient(145deg, #8e44ad, #c0392b); color: white; }
+    .player-card:hover { transform: scale(1.1); }
+    .animate-select { animation: selectAnimation 0.5s ease-out forwards; }
+    @keyframes selectAnimation {
+      0% { transform: translateX(0); opacity: 1; }
+      100% { transform: translateX(100%) rotate(15deg); opacity: 0; }
+    }
+    .animate-draw { animation: drawCardAnimation 1.5s ease; }
+    @keyframes drawCardAnimation {
+      0% { transform: translateY(0); opacity: 1; }
+      50% { transform: translateY(-20px); opacity: 0.5; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+    .animate-skip { animation: skipAnimation 1.5s ease; }
+    @keyframes skipAnimation {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    .animate-reverse { animation: reverseAnimation 1.5s ease; }
+    @keyframes reverseAnimation {
+      0% { transform: rotateY(0deg); }
+      50% { transform: rotateY(180deg); }
+      100% { transform: rotateY(360deg); }
+    }
+    .animate-wild { animation: wildAnimation 1.5s ease; }
+    @keyframes wildAnimation {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+      100% { transform: scale(1); }
+    }
+    .animate-draw4 { animation: draw4Animation 1.5s ease; }
+    @keyframes draw4Animation {
+      0% { transform: translateX(0); }
+      50% { transform: translateX(20px); }
+      100% { transform: translateX(0); }
+    }
+    /* مودال اختيار اللون للعبة UNO */
+    #colorModal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    #colorModal.active { display: flex; }
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      animation: modalFadeIn 0.5s ease;
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .color-options {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .color-option {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .color-option:hover { transform: scale(1.2); }
+    .color-option.red { background-color: red; }
+    .color-option.blue { background-color: blue; }
+    .color-option.green { background-color: green; }
+    .color-option.yellow { background-color: yellow; }
+    /* تغطية نهاية لعبة UNO */
+    #endGameOverlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1001;
+    }
+    #endGameOverlay.active {
+      display: flex;
+      animation: fadeIn 1s ease;
+    }
+    .end-message {
+      font-size: 3em;
+      color: white;
+      text-align: center;
+      animation: scaleUp 1s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes scaleUp { from { transform: scale(0.5); } to { transform: scale(1); } }
+    /* ===================== نهاية كود UNO ===================== */
     
-    /* أنماط لعبة Dots & Boxes */
+    /* ===================== كود لعبة Dots & Boxes (النسخة الأصلية) ===================== */
     #dots-boxes {
       --grid-color: #2c3e50;
       --bg-color: #f8f9fa;
@@ -298,124 +374,101 @@
       box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
       max-width: 800px;
       margin: 1rem auto;
+      position: relative;
     }
-    #dots-boxes .header {
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
+    #dots-boxes .header { text-align: center; margin-bottom: 1.5rem; }
     #dots-boxes .title {
       color: var(--grid-color);
       margin: 0 0 1rem;
       font-size: 2.2rem;
     }
-    #dots-boxes .controls {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    #dots-boxes .color-picker {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    #dots-boxes .color-input {
-      width: 40px;
-      height: 40px;
-      border: 2px solid var(--grid-color);
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    #dots-boxes .mode-buttons {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      justify-content: center;
+    #dots-settings {
+      text-align: center;
       margin-bottom: 1rem;
     }
-    #dots-boxes .btn {
-      background: var(--grid-color);
-      color: white;
-      border: none;
-      padding: 0.8rem 1.5rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: var(--transition);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+    #dots-settings select,
+    #dots-settings button {
+      padding: 5px 10px;
+      font-size: 1em;
+      margin: 0 5px;
     }
-    #dots-boxes .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
-    }
-    #dots-boxes #gameBoard {
-      border: 3px solid var(--grid-color);
-      border-radius: 12px;
-      background: white;
-      margin: 1.5rem auto;
-      display: block;
-    }
-    #dots-boxes .current-player {
+    #dotsScoreboard {
       text-align: center;
-      font-size: 1.2rem;
       margin-top: 1rem;
-      padding: 0.5rem 1rem;
-      background: rgba(44, 62, 80, 0.1);
-      border-radius: 8px;
+      font-size: 1.2em;
+      font-weight: bold;
     }
-    #dots-boxes .dot {
-      fill: var(--grid-color);
+    .box {
+      transition: fill-opacity 0.5s ease, fill 0.5s ease;
     }
-    #dots-boxes .line {
-      stroke-width: 3;
-      stroke-linecap: round;
-    }
-    #dots-boxes .box {
-      fill-opacity: 0.3;
-    }
+    /* ===================== نهاية كود Dots & Boxes ===================== */
     
-    /* أنماط لعبة "برا السالفة" */
+    /* ===================== كود لعبة "برا السالفة" (النسخة الأصلية) ===================== */
     @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap');
     #bra-salfa {
       font-family: 'Cairo', sans-serif;
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, #74ABE2, #5563DE);
+      background: url('bra-salfa-bg.jpg') no-repeat center center;
+      background-size: cover;
       color: #333;
       direction: rtl;
+      min-height: 100vh;
     }
     #bra-salfa h1 { margin-bottom: 10px; }
     #bra-salfa p { margin: 10px 0; }
-    #bra-salfa .screen { display: none; padding: 20px; text-align: center; animation: fadeIn 0.5s ease-in-out; }
+    #bra-salfa .screen {
+      display: none;
+      padding: 20px;
+      text-align: center;
+      animation: fadeIn 0.5s ease-in-out;
+    }
     #bra-salfa .active { display: block; }
     #bra-salfa form { margin-top: 20px; }
-    #bra-salfa label { font-size: 1.1em; display: block; margin: 10px 0 5px; }
-    #bra-salfa input, 
-    #bra-salfa select, 
-    #bra-salfa button { font-size: 1em; padding: 8px; margin: 5px; border-radius: 5px; border: 1px solid #ccc; }
-    #bra-salfa button { background-color: #5563DE; color: #fff; cursor: pointer; transition: background-color 0.3s ease; }
+    #bra-salfa label {
+      font-size: 1.1em;
+      display: block;
+      margin: 10px 0 5px;
+    }
+    #bra-salfa input,
+    #bra-salfa select,
+    #bra-salfa button {
+      font-size: 1em;
+      padding: 8px;
+      margin: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    #bra-salfa button {
+      background-color: #5563DE;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
     #bra-salfa button:hover { background-color: #3f4bb8; }
-    /* زر العودة على شكل أيقونة في الزاوية اليسرى العليا */
-    #bra-salfa #bs-back-to-category {
+    /* زر العودة في "برا السالفة" */
+    #bs-back-to-category {
       position: fixed;
       top: 10px;
-      left: 10px;
+      left: 50%;
+      transform: translateX(-50%);
       background-color: #dc3545;
       border: none;
-      padding: 8px;
-      border-radius: 50%;
+      padding: 10px 15px;
+      border-radius: 5px;
       color: #fff;
       cursor: pointer;
       transition: background-color 0.3s ease;
       z-index: 300;
       font-size: 1.2em;
-      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    #bra-salfa #bs-back-to-category:hover { background-color: #c82333; }
-    /* لوحة النتائج */
+    #bs-back-to-category i { margin-right: 5px; }
+    #bs-back-to-category:hover { background-color: #c82333; }
     #bra-salfa #bs-scoreboard {
-      margin-top: 60px;
+      margin-top: 80px;
       background: rgba(255, 255, 255, 0.9);
       padding: 10px 15px;
       border-radius: 8px;
@@ -467,117 +520,284 @@
       margin-bottom: 10px;
       color: #5563DE;
     }
-    
-    /* وسائط العرض: استجابة للجوال والآيباد */
+    /* ===================== استجابة الأجهزة ===================== */
     @media (max-width: 768px) {
-      .sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-        padding: 10px;
-      }
-      .main-content {
-        margin-right: 0;
-        padding: 15px;
-      }
-      #scoreboard { grid-template-columns: 1fr; }
-      .board { max-width: 100%; }
+      body { flex-direction: column; }
+      .main-content { padding: 15px; }
       #uno-settings, #uno-gameArea { width: 100%; }
-      #uno-hands {
-        flex-direction: column;
-      }
-      #opponent-hand, #player-hand, #uno-deck-center {
-        width: 100%;
-      }
-      /* استجابة Dots & Boxes */
-      #dots-boxes {
-        padding: 1rem;
-      }
-      #dots-boxes .title {
-        font-size: 1.8rem;
-      }
-      #dots-boxes .btn {
-        font-size: 0.9rem;
-        padding: 0.6rem 1rem;
-      }
+      #uno-hands { flex-direction: column; }
+      #opponent-hand, #player-hand, #uno-deck-center { width: 100%; }
+    }
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .main-content { margin-right: 200px; padding: 20px; }
+    }
+    
+    /* ===================== أنماط لعبة XO ===================== */
+    /* عزل أنماط لعبة XO داخل القسم الجديد باستخدام الفئة "xo-container" */
+    #xo .xo-container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 0 15px;
+    }
+    #xo .xo-container header.xo-header {
+      background: linear-gradient(135deg, #2c3e50, #3498db);
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    #xo .xo-container header.xo-header h1 {
+      margin: 0;
+      font-size: 2.5em;
+    }
+    #xo .xo-container #scoreboard {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      background: #34495e;
+      color: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      text-align: center;
+      font-size: 1.2em;
+      margin-bottom: 20px;
+    }
+    #xo .xo-container #gameOptions {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #xo .xo-container #gameOptions label { margin-right: 5px; }
+    #xo .xo-container #gameOptions select {
+      padding: 5px;
+      font-size: 1em;
+      margin: 0 10px;
+    }
+    #xo .xo-container #status {
+      text-align: center;
+      font-size: 1.5em;
+      margin-bottom: 20px;
+    }
+    #xo .xo-container .board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+      background: #424852;
+      padding: 5px;
+      border-radius: 10px;
+      max-width: 320px;
+      margin: 0 auto 20px;
+    }
+    #xo .xo-container .cell {
+      background: #ecf0f1;
+      height: 100px;
+      font-size: 3.5em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      color: #2c3e50;
+      border-radius: 5px;
+    }
+    #xo .xo-container .cell:hover {
+      background: #bdc3c7;
+      transform: rotate(3deg) scale(1.1);
+    }
+    #xo .xo-container .cell.taken { cursor: not-allowed; }
+    #xo .xo-container .cell.winning {
+      background: #2ecc71;
+      color: white;
+    }
+    #xo .xo-container .buttons {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    #xo .xo-container .buttons button {
+      padding: 10px 20px;
+      font-size: 1em;
+      margin: 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    #xo .xo-container .buttons button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 8px rgba(0,0,0,0.2);
+    }
+    #xo .xo-container .btn-new { background: #3498db; color: #fff; }
+    #xo .xo-container .btn-reset { background: #e74c3c; color: #fff; }
+    #xo .xo-container .overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3em;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+    #xo .xo-container .overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    #xo .xo-container .overlay.win {
+      background: rgba(46, 204, 113, 0.9);
+      color: white;
+      animation: animateOverlay 2s ease;
+    }
+    #xo .xo-container .overlay.lose {
+      background: rgba(231, 76, 60, 0.9);
+      color: white;
+      animation: animateOverlay 2s ease;
+    }
+    #xo .xo-container .overlay.draw {
+      background: rgba(255, 165, 0, 0.9);
+      color: white;
+      animation: animateOverlay 2s ease;
+    }
+    @keyframes animateOverlay {
+      0% { transform: scale(0.5); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    @keyframes cellPop {
+      0% { transform: scale(0); }
+      90% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    #xo .xo-container .cell:not(.taken) { animation: cellPop 0.3s ease; }
+    @media screen and (max-width: 768px) {
+      #xo .xo-container #scoreboard { grid-template-columns: 1fr; }
+      #xo .xo-container .board { max-width: 100%; }
     }
   </style>
-  <style>
-    /* ------------------ أنماط لعبة "برا السالفة" ------------------ */
-    /* تم استيراد خط Cairo بالفعل في الأعلى */
-  </style>
+  
+  <!-- سكربت تبديل الأقسام والانميشنات التمهيدية -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const welcomeOverlay = document.getElementById("welcomeOverlay");
+      const gamesOverlay = document.getElementById("gamesOverlay");
+      const mainContent = document.querySelector(".main-content");
+      const returnButton = document.getElementById("returnButton");
+      
+      // إخفاء زر العودة عند البداية
+      returnButton.style.display = "none";
+      
+      // بعد 2 ثانية، إخفاء شاشة الترحيب تدريجيًا خلال 1 ثانية
+      setTimeout(() => {
+        welcomeOverlay.style.opacity = 0;
+        setTimeout(() => {
+          welcomeOverlay.style.display = "none";
+          // عرض شاشة اختيار الألعاب
+          gamesOverlay.style.display = "flex";
+          gamesOverlay.style.opacity = 1;
+        }, 1000);
+      }, 2000);
+      
+      // عند النقر على أي خيار لعبة في شاشة الألعاب
+      document.querySelectorAll(".game-option").forEach(option => {
+        option.addEventListener("click", function() {
+          const targetId = this.getAttribute("data-target");
+          gamesOverlay.style.transition = "opacity 1s";
+          gamesOverlay.style.opacity = 0;
+          setTimeout(() => {
+            gamesOverlay.style.display = "none";
+            mainContent.style.display = "block";
+            // إخفاء كافة أقسام الألعاب ثم عرض القسم المختار
+            document.querySelectorAll(".game-section").forEach(sec => {
+              sec.style.display = "none";
+              sec.style.opacity = 1;
+            });
+            document.getElementById(targetId).style.display = "block";
+            // إظهار زر العودة للقائمة
+            returnButton.style.display = "block";
+            returnButton.style.opacity = 0;
+            setTimeout(() => { returnButton.style.transition = "opacity 1s"; returnButton.style.opacity = 1; }, 50);
+          }, 1000);
+        });
+      });
+      
+      // زر العودة للقائمة
+      returnButton.addEventListener("click", function() {
+        document.querySelectorAll(".game-section").forEach(sec => {
+          sec.style.transition = "opacity 1s";
+          sec.style.opacity = 0;
+        });
+        setTimeout(() => {
+          mainContent.style.display = "none";
+          gamesOverlay.style.display = "flex";
+          gamesOverlay.style.opacity = 0;
+          setTimeout(() => { gamesOverlay.style.transition = "opacity 1s"; gamesOverlay.style.opacity = 1; }, 50);
+          returnButton.style.display = "none";
+          document.querySelectorAll(".game-section").forEach(sec => { sec.style.opacity = 1; sec.style.display = "none"; });
+        }, 1000);
+      });
+    });
+  </script>
 </head>
 <body>
-  <!-- القائمة الجانبية -->
-  <nav class="sidebar">
-    <h2>الألعاب</h2>
-    <ul>
-      <li><a href="#x-o">لعبة X و O</a></li>
-      <li><a href="#uno">لعبة UNO</a></li>
-      <li><a href="#dots-boxes">لعبة النقاط والمربعات</a></li>
-      <li><a href="#bra-salfa">برا السالفة</a></li>
-    </ul>
-  </nav>
-
-  <!-- المحتوى الرئيسي -->
-  <main class="main-content">
-    <!-- قسم لعبة XO -->
-    <section id="x-o" class="game-container active">
-      <div class="container">
-        <header class="xo-header">
-          <h1>لعبة X و O</h1>
-        </header>
-        <div id="scoreboard">
-          <div>لاعب X: <span id="scoreX">0</span></div>
-          <div>الوقت المتبقي: <span id="timer">30</span></div>
-          <div>لاعب O: <span id="scoreO">0</span></div>
+  <!-- شاشة الترحيب الأولى -->
+  <div id="welcomeOverlay" class="overlay">
+    <div class="welcome-content">
+      <h1>اهلا بك في موقع L3BHA</h1>
+      <img src="games-logo.png" alt="شعار الألعاب" class="welcome-logo" style="width:200px; margin-top:20px;" />
+    </div>
+  </div>
+  
+  <!-- شاشة اختيار الألعاب (الانميشن الثاني) -->
+  <div id="gamesOverlay" class="overlay" style="display:none;">
+    <div class="games-content">
+      <header class="games-header">
+        <h1>L3BHA</h1>
+      </header>
+      <div class="games-menu">
+        <div class="game-option" data-target="uno">
+          <i class="fas fa-dice"></i>
+          <span>UNO</span>
         </div>
-        <div id="gameOptions">
-          <label for="modeSelect">وضع اللعبة:</label>
-          <select id="modeSelect" onchange="toggleDifficulty()">
-            <option value="pvp">لاعب ضد لاعب</option>
-            <option value="bot">لاعب ضد البوت</option>
-            <option value="online">لاعب ضد شخص انلاين</option>
-          </select>
-          <span id="difficultyContainer" style="display:none;">
-            <label for="difficultySelect">مستوى البوت:</label>
-            <select id="difficultySelect">
-              <option value="سهل">سهل</option>
-              <option value="متوسط">متوسط</option>
-              <option value="صعب">صعب</option>
-            </select>
-          </span>
+        <div class="game-option" data-target="dots-boxes">
+          <i class="fas fa-th"></i>
+          <span>Dots & Boxes</span>
         </div>
-        <div id="onlinePlayers" style="display:none;">
-          <h2>اللاعبون المتصلون</h2>
-          <ul id="onlinePlayersList"></ul>
+        <div class="game-option" data-target="bra-salfa">
+          <i class="fas fa-comment"></i>
+          <span>برا السالفة</span>
         </div>
-        <div id="status">دور اللاعب X</div>
-        <div class="board" id="board"></div>
-        <div class="buttons">
-          <button class="btn-new" onclick="newGame()">لعبة جديدة</button>
-          <button class="btn-reset" onclick="resetScores()">إعادة ضبط النتائج</button>
+        <!-- إضافة خيار لعبة XO -->
+        <div class="game-option" data-target="xo">
+          <i class="fas fa-times"></i>
+          <span>XO</span>
         </div>
       </div>
-      <div id="lostOverlay" class="overlay lose">لقد خسرت!</div>
-      <div id="winOverlay" class="overlay win">لقد فزت!</div>
-      <div id="drawOverlay" class="overlay draw">التعادل!</div>
-      <div id="invitationOverlay">تم إرسال الدعوة!</div>
-    </section>
-
+    </div>
+  </div>
+  
+  <!-- زر العودة للقائمة -->
+  <button id="returnButton"><i class="fas fa-home"></i></button>
+  
+  <!-- المحتوى الرئيسي -->
+  <main class="main-content">
     <!-- قسم لعبة UNO -->
-    <section id="uno" class="game-container">
+    <section id="uno" class="game-section">
+      <div id="background-shapes"></div>
       <h1>لعبة UNO</h1>
       <div id="uno-settings">
-        <label>
-          <input type="radio" name="uno-mode" value="bot" checked>
-          لعب ضد الحاسوب
-        </label>
-        <label>
-          <input type="radio" name="uno-mode" value="human">
-          لعب ضد شخص
-        </label>
-        <br>
+        <div id="mode-options">
+          <label class="mode-option active">
+            <input type="radio" name="uno-mode" value="bot" checked />
+            لعب ضد الحاسوب
+          </label>
+          <label class="mode-option">
+            <input type="radio" name="uno-mode" value="human" />
+            لعب ضد شخص
+          </label>
+        </div>
         <div id="uno-bot-difficulty">
           <label>
             مستوى الحاسوب:
@@ -599,7 +819,9 @@
           </div>
           <div id="uno-deck-center">
             <div id="uno-deck">
-              <button id="draw-card">اسحب ورقة (<span id="deck-count"></span>)</button>
+              <button id="draw-card">
+                اسحب ورقة (<span id="deck-count"></span>)
+              </button>
             </div>
             <div id="uno-discard">
               <h2>الورقة الحالية</h2>
@@ -613,54 +835,52 @@
         </div>
       </div>
     </section>
-
+    
     <!-- قسم لعبة Dots & Boxes -->
-    <section id="dots-boxes" class="game-container">
+    <section id="dots-boxes" class="game-section">
       <div class="header">
         <h1 class="title">لعبة النقاط والمربعات</h1>
       </div>
-      <div class="controls">
-        <div class="color-picker">
-          <label>لون اللاعب 1:</label>
-          <input type="color" id="player1Color" class="color-input" value="#e74c3c">
-        </div>
-        <div class="color-picker">
-          <label>لون اللاعب 2:</label>
-          <input type="color" id="player2Color" class="color-input" value="#3498db">
-        </div>
-      </div>
-      <div class="mode-buttons">
-        <button class="btn" onclick="startGameDots('human')">
-          <span>👥</span> لاعب ضد لاعب
-        </button>
-        <button class="btn" onclick="startGameDots('bot')">
-          <span>🤖</span> لاعب ضد كمبيوتر
-        </button>
+      <div id="dots-settings">
+        <label for="gridSizeSelect">حجم الشبكة:</label>
+        <select id="gridSizeSelect">
+          <option value="4">4 × 4</option>
+          <option value="5">5 × 5</option>
+          <option value="6">6 × 6</option>
+          <option value="7">7 × 7</option>
+          <option value="8">8 × 8</option>
+          <option value="9">9 × 9</option>
+          <option value="10">10 × 10</option>
+        </select>
+        <button onclick="changeGridSize()">تطبيق</button>
+        <br><br>
+        <label for="dotsModeSelect">وضع اللعبة:</label>
+        <select id="dotsModeSelect" onchange="changeDotsMode()">
+          <option value="human">لاعب ضد لاعب</option>
+          <option value="bot">لاعب ضد الكمبيوتر</option>
+        </select>
       </div>
       <svg id="gameBoard" xmlns="http://www.w3.org/2000/svg"></svg>
       <div class="current-player">
         دور اللاعب الحالي: <span id="currentPlayer" style="font-weight: bold;">1</span>
       </div>
+      <div id="dotsScoreboard">
+        لاعب 1: <span id="scorePlayer1">0</span> | لاعب 2: <span id="scorePlayer2">0</span>
+      </div>
     </section>
-
-    <!-- قسم لعبة برا السالفة -->
-    <section id="bra-salfa" class="game-container">
-      <!-- زر العودة على شكل أيقونة في الزاوية اليسرى العليا -->
+    
+    <!-- قسم لعبة "برا السالفة" -->
+    <section id="bra-salfa" class="game-section">
       <button id="bs-back-to-category"><i class="fas fa-arrow-left"></i></button>
-      <!-- لوحة النتائج الخاصة باللعبة -->
       <div id="bs-scoreboard">
         <div id="bs-score-content"></div>
       </div>
-      <!-- شاشة اختيار الفئة -->
       <div id="bs-category-screen" class="screen active">
         <div class="box">
           <h1>اختر فئة العنصر</h1>
-          <div id="bs-category-options" class="category-grid">
-            <!-- سيتم إنشاء خيارات الفئات هنا -->
-          </div>
+          <div id="bs-category-options" class="category-grid"></div>
         </div>
       </div>
-      <!-- شاشة إعداد اللعبة مع تعديل عدد اللاعبين من 2 إلى 20 -->
       <div id="bs-setup-screen" class="screen">
         <div class="box">
           <h1>إعداد اللعبة</h1>
@@ -693,19 +913,15 @@
           </form>
         </div>
       </div>
-      <!-- شاشة إدخال أسماء اللاعبين -->
       <div id="bs-names-screen" class="screen">
         <div class="box">
           <h1>أدخل أسماء اللاعبين</h1>
           <form id="bs-names-form">
-            <div id="bs-names-container">
-              <!-- سيتم إنشاء حقول الإدخال هنا -->
-            </div>
+            <div id="bs-names-container"></div>
             <button type="submit">بدء اللعبة</button>
           </form>
         </div>
       </div>
-      <!-- شاشة عرض الدور لكل لاعب -->
       <div id="bs-role-screen" class="screen">
         <div class="box">
           <h1>عرض الدور</h1>
@@ -715,7 +931,6 @@
           <button id="bs-next-role-btn" style="display:none;">التالي</button>
         </div>
       </div>
-      <!-- شاشة مرحلة الاستجواب -->
       <div id="bs-game-screen" class="screen">
         <div class="box">
           <h1>مرحلة الاستجواب</h1>
@@ -724,7 +939,6 @@
           <button id="bs-go-to-vote-btn">البدء في التصويت</button>
         </div>
       </div>
-      <!-- شاشة التصويت -->
       <div id="bs-vote-screen" class="screen">
         <div class="box">
           <h1>مرحلة التصويت</h1>
@@ -734,7 +948,6 @@
           </form>
         </div>
       </div>
-      <!-- شاشة النتيجة -->
       <div id="bs-result-screen" class="screen">
         <div class="box">
           <h1>النتيجة - الجولة <span id="bs-round-number"></span></h1>
@@ -743,30 +956,869 @@
           <button id="bs-restart-btn" style="margin-top:10px;">إعادة ضبط اللعبة</button>
         </div>
       </div>
-      <!-- شاشة الأنميشن -->
       <div id="bs-animation-screen" class="screen" style="display:none;">
         <div id="bs-animation-content">كشف الهوية...</div>
       </div>
     </section>
+    
+    <!-- قسم لعبة XO الجديد -->
+    <section id="xo" class="game-section">
+      <div class="xo-container">
+        <header class="xo-header">
+          <h1>لعبة X و O</h1>
+        </header>
+        <div id="scoreboard">
+          <div>لاعب X: <span id="scoreX">0</span></div>
+          <div>الوقت المتبقي: <span id="timer">30</span></div>
+          <div>لاعب O: <span id="scoreO">0</span></div>
+        </div>
+        <div id="gameOptions">
+          <label for="modeSelect">وضع اللعبة:</label>
+          <select id="modeSelect" onchange="toggleDifficulty()">
+            <option value="pvp">لاعب ضد لاعب</option>
+            <option value="bot">لاعب ضد البوت</option>
+            <option value="online">لاعب ضد شخص انلاين</option>
+          </select>
+          <span id="difficultyContainer" style="display:none;">
+            <label for="difficultySelect">مستوى البوت:</label>
+            <select id="difficultySelect">
+              <option value="سهل">سهل</option>
+              <option value="متوسط">متوسط</option>
+              <option value="صعب">صعب</option>
+            </select>
+          </span>
+        </div>
+        <div id="status">دور اللاعب X</div>
+        <div class="board" id="board"></div>
+        <div class="buttons">
+          <button class="btn-new" onclick="newGame()">لعبة جديدة</button>
+          <button class="btn-reset" onclick="resetScores()">إعادة ضبط النتائج</button>
+        </div>
+        <!-- طبقات الأنميشن -->
+        <div id="lostOverlay" class="overlay lose">لقد خسرت!</div>
+        <div id="winOverlay" class="overlay win">لقد فزت!</div>
+        <div id="drawOverlay" class="overlay draw">التعادل!</div>
+        <!-- نافذة الدعوة -->
+        <div id="invitationOverlay">تم إرسال الدعوة!</div>
+      </div>
+    </section>
   </main>
   
-  <!-- سكربت التبديل بين الأقسام -->
+  <!-- سكربت لعبة UNO -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      document.querySelectorAll('.sidebar a').forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          const target = link.getAttribute('href').substring(1);
-          document.querySelectorAll('.game-container').forEach(gc => gc.classList.remove('active'));
-          document.getElementById(target).classList.add('active');
+    function initUNO() {
+      document.querySelectorAll('#mode-options input[name="uno-mode"]').forEach((radio) => {
+        radio.addEventListener("change", () => {
+          document.querySelectorAll("#mode-options .mode-option").forEach((label) => label.classList.remove("active"));
+          radio.parentElement.classList.add("active");
+          UNOGame.mode = radio.value;
+          const botDiff = document.getElementById("uno-bot-difficulty");
+          botDiff.style.display = UNOGame.mode === "bot" ? "block" : "none";
         });
       });
+      document.getElementById("uno-difficulty").addEventListener("change", (e) => { UNOGame.difficulty = e.target.value; });
+      document.getElementById("uno-startGame").addEventListener("click", () => { UNOGame.startGame(); });
+      document.getElementById("draw-card").addEventListener("click", () => {
+        if (UNOGame.isCurrentPlayerHuman()) {
+          UNOGame.drawCard(UNOGame.currentPlayer);
+          UNOGame.updateUI();
+          UNOGame.nextTurn();
+        }
+      });
+      document.getElementById("uno-back").addEventListener("click", () => { UNOGame.backToSettings(); });
+    }
+    
+    function showColorSelection() {
+      return new Promise((resolve) => {
+        const modal = document.getElementById("colorModal");
+        modal.classList.add("active");
+        const options = modal.querySelectorAll(".color-option");
+        options.forEach((option) => {
+          option.onclick = function () {
+            const selectedColor = this.getAttribute("data-color");
+            modal.classList.remove("active");
+            resolve(selectedColor);
+          };
+        });
+      });
+    }
+    
+    function generateBackgroundShapes() {
+      const container = document.getElementById("background-shapes");
+      container.innerHTML = "";
+      const shapes = ["Skip", "Opp", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+      const colors = ["red", "blue", "green", "yellow", "purple", "orange"];
+      const numShapes = 15;
+      for (let i = 0; i < numShapes; i++) {
+        const shapeDiv = document.createElement("div");
+        shapeDiv.className = "background-shape";
+        shapeDiv.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+        shapeDiv.style.color = colors[Math.floor(Math.random() * colors.length)];
+        shapeDiv.style.fontSize = (Math.floor(Math.random() * 3) + 2) + "em";
+        shapeDiv.style.left = Math.floor(Math.random() * 100) + "%";
+        shapeDiv.style.top = Math.floor(Math.random() * 100) + "%";
+        shapeDiv.style.animationDelay = Math.random() * 5 + "s";
+        container.appendChild(shapeDiv);
+      }
+    }
+    
+    const UNOGame = {
+      deck: [],
+      players: [[], []],
+      discardPile: [],
+      currentPlayer: 0,
+      mode: "bot",
+      difficulty: "easy",
+      direction: 1,
+      init() { initUNO(); },
+      startGame() {
+        document.getElementById("uno-settings").style.display = "none";
+        document.getElementById("uno-gameArea").style.display = "block";
+        generateBackgroundShapes();
+        this.deck = this.generateDeck();
+        this.shuffle(this.deck);
+        this.players = [[], []];
+        for (let i = 0; i < 7; i++) {
+          this.players[0].push(this.deck.pop());
+          this.players[1].push(this.deck.pop());
+        }
+        let firstCard = this.deck.pop();
+        this.discardPile = [firstCard];
+        this.currentPlayer = 0;
+        this.updateUI();
+        if (!this.isCurrentPlayerHuman()) {
+          setTimeout(() => this.botMove(), 1000);
+        }
+      },
+      backToSettings() {
+        document.getElementById("uno-settings").style.display = "block";
+        document.getElementById("uno-gameArea").style.display = "none";
+        this.deck = [];
+        this.players = [[], []];
+        this.discardPile = [];
+        this.currentPlayer = 0;
+        this.direction = 1;
+      },
+      generateDeck() {
+        const colors = ["red", "blue", "green", "yellow"];
+        const numbers = ["0","1","2","3","4","5","6","7","8","9"];
+        const specials = ["Skip", "Reverse", "+2"];
+        let deck = [];
+        colors.forEach((color) => {
+          deck.push({ color: color, value: "0" });
+          for (let i = 1; i < numbers.length; i++) {
+            deck.push({ color: color, value: numbers[i] });
+            deck.push({ color: color, value: numbers[i] });
+          }
+          specials.forEach((special) => {
+            deck.push({ color: color, value: special });
+            deck.push({ color: color, value: special });
+          });
+        });
+        for (let i = 0; i < 4; i++) {
+          deck.push({ color: "wild", value: "Wild" });
+          deck.push({ color: "wild", value: "WildDraw4" });
+        }
+        return deck;
+      },
+      shuffle(deck) {
+        for (let i = deck.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [deck[i], deck[j]] = [deck[j], deck[i]];
+        }
+      },
+      updateUI() {
+        document.getElementById("deck-count").textContent = this.deck.length;
+        const topCard = this.discardPile[this.discardPile.length - 1];
+        const discardElem = document.getElementById("discard-pile");
+        discardElem.textContent = topCard.value;
+        discardElem.className = topCard.color === "wild" ? "uno-card wild" : "uno-card " + topCard.color;
+        const playerCardsDiv = document.getElementById("player-cards");
+        playerCardsDiv.innerHTML = "";
+        this.players[0].forEach((card, index) => {
+          const cardElem = document.createElement("div");
+          cardElem.className = card.color === "wild" ? "uno-card wild player-card" : "uno-card " + card.color + " player-card";
+          cardElem.textContent = card.value;
+          cardElem.addEventListener("click", () => {
+            if (this.isCurrentPlayerHuman()) {
+              cardElem.classList.add("animate-select");
+              setTimeout(() => { this.playCard(0, index); }, 500);
+            }
+          });
+          playerCardsDiv.appendChild(cardElem);
+        });
+        const opponentCardsDiv = document.getElementById("opponent-cards");
+        opponentCardsDiv.innerHTML = "";
+        if (this.mode === "bot") {
+          for (let i = 0; i < this.players[1].length; i++) {
+            const cardElem = document.createElement("div");
+            cardElem.className = "uno-card";
+            cardElem.style.background = "#555";
+            cardElem.textContent = "?";
+            opponentCardsDiv.appendChild(cardElem);
+          }
+        } else {
+          this.players[1].forEach((card) => {
+            const cardElem = document.createElement("div");
+            cardElem.className = card.color === "wild" ? "uno-card wild" : "uno-card " + card.color;
+            cardElem.textContent = card.value;
+            cardElem.addEventListener("click", () => {
+              if (!this.isCurrentPlayerHuman()) {
+                this.playCard(1, this.players[1].indexOf(card));
+              }
+            });
+            opponentCardsDiv.appendChild(cardElem);
+          });
+        }
+      },
+      isCurrentPlayerHuman() {
+        return this.mode === "bot" ? this.currentPlayer === 0 : true;
+      },
+      getValidMoves(hand) {
+        const topCard = this.discardPile[this.discardPile.length - 1];
+        return hand.map((card, index) => {
+          if (card.color === "wild") return index;
+          return (card.color === topCard.color || card.value === topCard.value) ? index : -1;
+        }).filter((index) => index !== -1);
+      },
+      playCard(playerIndex, cardIndex) {
+        const hand = this.players[playerIndex];
+        const card = hand[cardIndex];
+        const topCard = this.discardPile[this.discardPile.length - 1];
+        if (card.color === "wild" || card.color === topCard.color || card.value === topCard.value) {
+          hand.splice(cardIndex, 1);
+          this.discardPile.push(card);
+          this.updateUI();
+          if (this.checkWin()) return;
+          if (card.value === "+2") {
+            this.animatePlusTwo(() => {
+              const opponentIndex = playerIndex === 0 ? 1 : 0;
+              this.drawCard(opponentIndex);
+              this.drawCard(opponentIndex);
+              this.updateUI();
+              this.nextTurn();
+            });
+            return;
+          } else if (card.value === "Skip") {
+            this.animateSkip(() => { this.nextTurn(); });
+            return;
+          } else if (card.value === "Reverse") {
+            this.animateReverse(() => {
+              this.direction *= -1;
+              this.nextTurn();
+            });
+            return;
+          } else if (card.value === "Wild") {
+            this.animateWild(() => {
+              showColorSelection().then((chosenColor) => {
+                this.discardPile[this.discardPile.length - 1].color = chosenColor;
+                this.updateUI();
+                this.nextTurn();
+              });
+            });
+            return;
+          } else if (card.value === "WildDraw4") {
+            this.animateDraw4(() => {
+              showColorSelection().then((chosenColor) => {
+                this.discardPile[this.discardPile.length - 1].color = chosenColor;
+                const opponentIndex = this.currentPlayer === 0 ? 1 : 0;
+                for (let i = 0; i < 4; i++) {
+                  this.drawCard(opponentIndex);
+                }
+                this.updateUI();
+                this.nextTurn();
+              });
+            });
+            return;
+          } else {
+            this.nextTurn();
+          }
+        } else {
+          alert("لا يمكنك لعب هذه البطاقة!");
+        }
+      },
+      drawCard(playerIndex) {
+        if (this.deck.length === 0) {
+          const top = this.discardPile.pop();
+          this.deck = this.discardPile;
+          this.shuffle(this.deck);
+          this.discardPile = [top];
+        }
+        const card = this.deck.pop();
+        this.players[playerIndex].push(card);
+      },
+      nextTurn() {
+        this.currentPlayer = (this.currentPlayer + this.direction + this.players.length) % this.players.length;
+        this.updateUI();
+        if (!this.isCurrentPlayerHuman()) {
+          setTimeout(() => this.botMove(), 1000);
+        }
+      },
+      botMove() {
+        const hand = this.players[1];
+        const validMoves = this.getValidMoves(hand);
+        if (validMoves.length > 0) {
+          let chosenIndex;
+          if (this.difficulty === "easy") {
+            chosenIndex = validMoves[Math.floor(Math.random() * validMoves.length)];
+          } else {
+            let colorCount = { red: 0, blue: 0, green: 0, yellow: 0 };
+            hand.forEach((card) => { if (card.color in colorCount) colorCount[card.color]++; });
+            chosenIndex = validMoves[0];
+            let maxCount = -1;
+            validMoves.forEach((index) => {
+              const card = hand[index];
+              if (card.color in colorCount && colorCount[card.color] > maxCount) {
+                maxCount = colorCount[card.color];
+                chosenIndex = index;
+              }
+            });
+          }
+          this.playCard(1, chosenIndex);
+        } else {
+          this.drawCard(1);
+          this.updateUI();
+          const newValid = this.getValidMoves(this.players[1]);
+          if (newValid.length > 0) {
+            setTimeout(() => this.botMove(), 1000);
+          } else {
+            this.nextTurn();
+          }
+        }
+      },
+      checkWin() {
+        if (this.players[0].length === 0) {
+          this.endGame("player");
+          return true;
+        } else if (this.players[1].length === 0) {
+          this.endGame("opponent");
+          return true;
+        }
+        return false;
+      },
+      endGame(winner) {
+        let message = "";
+        if (this.mode === "bot") {
+          message = winner === "player" ? "فزت!" : "خسرت!";
+        } else {
+          message = winner === "player" ? "فاز اللاعب 1!" : "فاز اللاعب 2!";
+        }
+        const overlay = document.getElementById("endGameOverlay");
+        const endMessageDiv = overlay.querySelector(".end-message");
+        endMessageDiv.textContent = message;
+        overlay.classList.add("active");
+        overlay.onclick = () => {
+          overlay.classList.remove("active");
+          UNOGame.backToSettings();
+        };
+      },
+      animatePlusTwo(callback) {
+        const opponentCardsDiv = document.getElementById("opponent-cards");
+        opponentCardsDiv.classList.add("animate-draw");
+        setTimeout(() => {
+          opponentCardsDiv.classList.remove("animate-draw");
+          callback();
+        }, 1500);
+      },
+      animateSkip(callback) {
+        const discardElem = document.getElementById("discard-pile");
+        discardElem.classList.add("animate-skip");
+        setTimeout(() => {
+          discardElem.classList.remove("animate-skip");
+          callback();
+        }, 1500);
+      },
+      animateReverse(callback) {
+        const discardElem = document.getElementById("discard-pile");
+        discardElem.classList.add("animate-reverse");
+        setTimeout(() => {
+          discardElem.classList.remove("animate-reverse");
+          callback();
+        }, 1500);
+      },
+      animateWild(callback) {
+        const discardElem = document.getElementById("discard-pile");
+        discardElem.classList.add("animate-wild");
+        setTimeout(() => {
+          discardElem.classList.remove("animate-wild");
+          callback();
+        }, 1500);
+      },
+      animateDraw4(callback) {
+        const discardElem = document.getElementById("discard-pile");
+        discardElem.classList.add("animate-draw4");
+        setTimeout(() => {
+          discardElem.classList.remove("animate-draw4");
+          callback();
+        }, 1500);
+      }
+    };
+    
+    document.addEventListener("DOMContentLoaded", () => { UNOGame.init(); });
+  </script>
+  
+  <!-- سكربت لعبة Dots & Boxes -->
+  <script>
+    const svgDots = document.querySelector('#dots-boxes #gameBoard');
+    const dotsPlayers = {
+      1: { color: "#e74c3c", score: 0 },
+      2: { color: "#3498db", score: 0 }
+    };
+    let gridSize = 4;
+    let boxSize = 50;
+    let dotsGameMode = "human";
+    let currentDotsPlayer = 1;
+    const dotsGameState = {
+      horizontalLines: [],
+      verticalLines: [],
+      boxes: []
+    };
+    
+    function initDotsGame() {
+      svgDots.innerHTML = '';
+      dotsGameState.horizontalLines = Array.from({length: gridSize}, () => Array(gridSize - 1).fill(false));
+      dotsGameState.verticalLines = Array.from({length: gridSize - 1}, () => Array(gridSize).fill(false));
+      dotsGameState.boxes = Array.from({length: gridSize - 1}, () => Array(gridSize - 1).fill(0));
+      const size = gridSize * boxSize;
+      svgDots.setAttribute('width', size);
+      svgDots.setAttribute('height', size);
+      for(let i = 0; i < gridSize; i++){
+        for(let j = 0; j < gridSize; j++){
+          const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          dot.classList.add('dot');
+          dot.setAttribute('cx', i * boxSize + boxSize/2);
+          dot.setAttribute('cy', j * boxSize + boxSize/2);
+          dot.setAttribute('r', 4);
+          dot.setAttribute('fill', "var(--grid-color)");
+          svgDots.appendChild(dot);
+        }
+      }
+    }
+    
+    function drawLine(x1, y1, x2, y2, color) {
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.classList.add('line');
+      line.setAttribute('x1', x1);
+      line.setAttribute('y1', y1);
+      line.setAttribute('x2', x2);
+      line.setAttribute('y2', y2);
+      line.setAttribute('stroke', color);
+      line.setAttribute('stroke-width', 3);
+      svgDots.appendChild(line);
+    }
+    
+    function fillBox(x, y, color) {
+      const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      rect.classList.add('box');
+      rect.setAttribute('x', x * boxSize + boxSize/2 + 2);
+      rect.setAttribute('y', y * boxSize + boxSize/2 + 2);
+      rect.setAttribute('width', boxSize - 4);
+      rect.setAttribute('height', boxSize - 4);
+      rect.setAttribute('fill', color);
+      rect.style.fillOpacity = 0;
+      svgDots.appendChild(rect);
+      requestAnimationFrame(() => { rect.style.fillOpacity = 1; });
+    }
+    
+    function updateCurrentDotsPlayer(){
+      const currentEl = document.getElementById("currentPlayer");
+      currentEl.textContent = currentDotsPlayer;
+      currentEl.style.color = dotsPlayers[currentDotsPlayer].color;
+    }
+    
+    function changeGridSize(){
+      gridSize = parseInt(document.getElementById("gridSizeSelect").value);
+      dotsPlayers[1].score = 0;
+      dotsPlayers[2].score = 0;
+      initDotsGame();
+      updateCurrentDotsPlayer();
+      updateDotsScoreboard();
+    }
+    
+    function changeDotsMode(){
+      dotsGameMode = document.getElementById("dotsModeSelect").value;
+      dotsPlayers[1].score = 0;
+      dotsPlayers[2].score = 0;
+      initDotsGame();
+      updateCurrentDotsPlayer();
+      updateDotsScoreboard();
+    }
+    
+    function makeLineMove(type, r, c){
+      if(type === 'h'){
+        if(dotsGameState.horizontalLines[r][c]) return false;
+        dotsGameState.horizontalLines[r][c] = true;
+        const x1 = c * boxSize + boxSize/2;
+        const y = r * boxSize + boxSize/2;
+        const x2 = (c+1) * boxSize + boxSize/2;
+        drawLine(x1, y, x2, y, dotsPlayers[currentDotsPlayer].color);
+      } else if(type === 'v'){
+        if(dotsGameState.verticalLines[r][c]) return false;
+        dotsGameState.verticalLines[r][c] = true;
+        const x = c * boxSize + boxSize/2;
+        const y1 = r * boxSize + boxSize/2;
+        const y2 = (r+1) * boxSize + boxSize/2;
+        drawLine(x, y1, x, y2, dotsPlayers[currentDotsPlayer].color);
+      }
+      let completed = checkForCompletedBoxes(type, r, c);
+      if(!completed) switchDotsPlayer();
+      updateDotsScoreboard();
+      if(isDotsGameOver()){
+        showDotsGameResult();
+      }
+      return true;
+    }
+    
+    function checkForCompletedBoxes(type, r, c){
+      let boxCompleted = false;
+      let boxesToCheck = [];
+      if(type === 'h'){
+        if(r < gridSize - 1) boxesToCheck.push({row: r, col: c});
+        if(r > 0) boxesToCheck.push({row: r-1, col: c});
+      } else if(type === 'v'){
+        if(c < gridSize - 1) boxesToCheck.push({row: r, col: c});
+        if(c > 0) boxesToCheck.push({row: r, col: c-1});
+      }
+      boxesToCheck.forEach(box => {
+        if(dotsGameState.boxes[box.row][box.col] === 0){
+          if(dotsGameState.horizontalLines[box.row][box.col] &&
+             dotsGameState.horizontalLines[box.row+1][box.col] &&
+             dotsGameState.verticalLines[box.row][box.col] &&
+             dotsGameState.verticalLines[box.row][box.col+1]){
+               dotsGameState.boxes[box.row][box.col] = currentDotsPlayer;
+               fillBox(box.col, box.row, dotsPlayers[currentDotsPlayer].color);
+               dotsPlayers[currentDotsPlayer].score++;
+               boxCompleted = true;
+          }
+        }
+      });
+      return boxCompleted;
+    }
+    
+    function switchDotsPlayer(){
+      currentDotsPlayer = (currentDotsPlayer === 1) ? 2 : 1;
+      updateCurrentDotsPlayer();
+      if(dotsGameMode === "bot" && currentDotsPlayer === 2){
+        setTimeout(botMove, 1000);
+      }
+    }
+    
+    function updateDotsScoreboard(){
+      document.getElementById("scorePlayer1").textContent = dotsPlayers[1].score;
+      document.getElementById("scorePlayer2").textContent = dotsPlayers[2].score;
+    }
+    
+    function isDotsGameOver(){
+      for(let i = 0; i < dotsGameState.boxes.length; i++){
+        for(let j = 0; j < dotsGameState.boxes[0].length; j++){
+          if(dotsGameState.boxes[i][j] === 0) return false;
+        }
+      }
+      return true;
+    }
+    
+    function showDotsGameResult(){
+      let score1 = dotsPlayers[1].score;
+      let score2 = dotsPlayers[2].score;
+      let message = "انتهت اللعبة!\n";
+      if(score1 > score2) message += "فاز اللاعب 1!";
+      else if(score2 > score1) message += "فاز اللاعب 2!";
+      else message += "تعادل!";
+      alert(message);
+    }
+    
+    function botMove(){
+      let moves = [];
+      for(let r = 0; r < gridSize; r++){
+        for(let c = 0; c < gridSize - 1; c++){
+          if(!dotsGameState.horizontalLines[r][c]){
+            moves.push({type: 'h', r: r, c: c});
+          }
+        }
+      }
+      for(let r = 0; r < gridSize - 1; r++){
+        for(let c = 0; c < gridSize; c++){
+          if(!dotsGameState.verticalLines[r][c]){
+            moves.push({type: 'v', r: r, c: c});
+          }
+        }
+      }
+      if(moves.length === 0) return;
+      let move = moves[Math.floor(Math.random() * moves.length)];
+      makeLineMove(move.type, move.r, move.c);
+    }
+    
+    let startDot = null, isDragging = false;
+    svgDots.addEventListener('mousedown', e => {
+      const rect = svgDots.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      startDot = { x: Math.floor(x / boxSize), y: Math.floor(y / boxSize) };
+      isDragging = true;
+    });
+    
+    svgDots.addEventListener('mouseup', e => {
+      if (!isDragging) return;
+      isDragging = false;
+      const rect = svgDots.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const endDot = { x: Math.floor(x / boxSize), y: Math.floor(y / boxSize) };
+      if(Math.abs(startDot.x - endDot.x) + Math.abs(startDot.y - endDot.y) !== 1) return;
+      if(startDot.y === endDot.y){
+        let row = startDot.y;
+        let col = Math.min(startDot.x, endDot.x);
+        makeLineMove('h', row, col);
+      } else if(startDot.x === endDot.x){
+        let col = startDot.x;
+        let row = Math.min(startDot.y, endDot.y);
+        makeLineMove('v', row, col);
+      }
+    });
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      initDotsGame();
+      updateCurrentDotsPlayer();
+      updateDotsScoreboard();
     });
   </script>
   
-  <!-- سكربتات لعبة XO -->
+  <!-- سكربت لعبة "برا السالفة" -->
   <script>
-    // كود لعبة XO كما هو في الكود الأصلي
+    document.getElementById("bs-back-to-category").addEventListener("click", function() {
+      document.querySelectorAll("#bra-salfa .screen").forEach(screen => screen.classList.remove("active"));
+      document.getElementById("bs-category-screen").classList.add("active");
+    });
+    const categories = {
+      "سيارات": ["تويوتا", "هوندا", "مرسيدس", "بي إم دبليو", "فورد", "شيفروليه", "نيسان", "لكزس", "أودي", "بورش", "لامبورغيني", "فيراري", "ميتسوبيشي", "سوبارو"],
+      "حيوانات": ["أسد", "فيل", "نمر", "زرافة", "دب", "قرد", "نمس", "ثعلب", "ذئب", "فهد", "غزال", "أرنب", "جمل", "بطريق"],
+      "أكلات عربية": ["كبسة", "منسف", "مقلوبة", "مسخن", "مجدرة", "فتة", "حمص", "تبولة", "فتوش", "شاورما", "مشاوي", "مندي", "مرق", "مطبقة"],
+      "كورة": ["ليونيل ميسي", "كريستيانو رونالدو", "نيمار جونيور", "محمد صلاح", "كيليان مبابي", "أنطوان غريزمان", "لوكا مودريتش", "كيفين دي بروين", "سيرجيو أجويرو"],
+      "فواكه": ["تفاح", "موز", "برتقال", "عنب", "كيوي", "أناناس", "مانجو", "فراولة", "بطيخ", "شمام", "رمان", "خوخ", "أفوكادو"],
+      "شخصيات كرتون في سبيستون": ["مغامر", "سوبر بطل", "فهد", "أمجد", "راشد", "سلمان", "عمرو", "أيمن"],
+      "ألعاب": ["شطرنج", "طاولة", "بلياردو", "كرة السلة", "كرة القدم", "تنس", "هوكي", "بوكيمون", "ماريو", "فيفا", "أساسنز كريد", "ماينكرافت"],
+      "أنمي": ["ناروتو", "ون بيس", "دراجون بول", "هجوم العمالقة", "هايكيو", "بليتش", "المحقق كونان", "كود غياس", "ديث نوت", "فول ميتال اليس"]
+    };
+    
+    const categoryIcons = {
+      "سيارات": "fa-car",
+      "حيوانات": "fa-paw",
+      "أكلات عربية": "fa-utensils",
+      "كورة": "fa-futbol",
+      "فواكه": "fa-apple-alt",
+      "شخصيات كرتون في سبيستون": "fa-tv",
+      "ألعاب": "fa-gamepad",
+      "أنمي": "fa-film"
+    };
+    
+    function updateScoreboard() {
+      let boardContent = document.getElementById("bs-score-content");
+      let html = "<strong>النتائج:</strong><br>";
+      players.forEach((name, index) => {
+        html += `${name}: ${scoreboard[index] || 0} نقطة<br>`;
+      });
+      boardContent.innerHTML = html;
+    }
+    
+    function switchScreen(fromId, toId) {
+      document.getElementById(fromId).classList.remove("active");
+      document.getElementById(toId).classList.add("active");
+    }
+    
+    function generateCategoryOptions() {
+      const container = document.getElementById("bs-category-options");
+      container.innerHTML = "";
+      for (let cat in categories) {
+        let div = document.createElement("div");
+        div.classList.add("category-option");
+        div.setAttribute("data-category", cat);
+        let icon = document.createElement("i");
+        icon.classList.add("fas", categoryIcons[cat]);
+        div.appendChild(icon);
+        let span = document.createElement("span");
+        span.innerText = cat;
+        div.appendChild(span);
+        div.addEventListener("click", function() {
+          let items = categories[cat];
+          let randomIndex = Math.floor(Math.random() * items.length);
+          chosenItem = items[randomIndex];
+          console.log("الفئة:", cat, "العنصر المختار:", chosenItem);
+          switchScreen("bs-category-screen", "bs-setup-screen");
+        });
+        container.appendChild(div);
+      }
+    }
+    
+    document.getElementById("bs-setup-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      numPlayers = parseInt(document.getElementById("bs-numPlayers").value);
+      switchScreen("bs-setup-screen", "bs-names-screen");
+      generateNameInputs();
+    });
+    
+    function generateNameInputs() {
+      const container = document.getElementById("bs-names-container");
+      container.innerHTML = "";
+      for(let i = 0; i < numPlayers; i++){
+        let div = document.createElement("div");
+        let label = document.createElement("label");
+        label.innerText = "اسم اللاعب " + (i + 1) + ":";
+        let input = document.createElement("input");
+        input.type = "text";
+        input.required = true;
+        input.id = "bs-playerName" + i;
+        div.appendChild(label);
+        div.appendChild(input);
+        container.appendChild(div);
+      }
+    }
+    
+    document.getElementById("bs-names-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      players = [];
+      scoreboard = [];
+      for(let i = 0; i < numPlayers; i++){
+        let name = document.getElementById("bs-playerName" + i).value.trim();
+        if(name === ""){
+          alert("الرجاء إدخال جميع أسماء اللاعبين.");
+          return;
+        }
+        players.push(name);
+        scoreboard.push(0);
+      }
+      updateScoreboard();
+      liarIndex = Math.floor(Math.random() * numPlayers);
+      console.log("اللاعب الذي لا يعرف الشيء:", players[liarIndex]);
+      switchScreen("bs-names-screen", "bs-role-screen");
+      roleIndex = 0;
+      updateRoleScreen();
+    });
+    
+    document.getElementById("bs-reveal-role-btn").addEventListener("click", function() {
+      let messageElem = document.getElementById("bs-role-message");
+      if(roleIndex === liarIndex) {
+        messageElem.innerText = "حاول معرفت الشيء";
+      } else {
+        messageElem.innerText = "الشيء هو: " + chosenItem;
+      }
+      document.getElementById("bs-reveal-role-btn").style.display = "none";
+      document.getElementById("bs-next-role-btn").style.display = "inline-block";
+    });
+    
+    document.getElementById("bs-next-role-btn").addEventListener("click", function() {
+      roleIndex++;
+      updateRoleScreen();
+    });
+    
+    function updateRoleScreen() {
+      if(roleIndex >= players.length) {
+        switchScreen("bs-role-screen", "bs-game-screen");
+        currentTurn = 0;
+        updateTurnInfo();
+        return;
+      }
+      document.getElementById("bs-role-player-name").innerText = "دور اللاعب: " + players[roleIndex];
+      document.getElementById("bs-role-message").innerHTML = "اضغط الزر لعرض الدور<br>(يرجى عدم النظر للاعبين الآخرين)";
+      document.getElementById("bs-reveal-role-btn").style.display = "inline-block";
+      document.getElementById("bs-next-role-btn").style.display = "none";
+    }
+    
+    document.getElementById("bs-next-turn-btn").addEventListener("click", function() {
+      currentTurn++;
+      updateTurnInfo();
+    });
+    
+    function updateTurnInfo() {
+      let askerIndex = currentTurn % numPlayers;
+      let targetIndex = (currentTurn + 1) % numPlayers;
+      document.getElementById("bs-turn-info").innerText = players[askerIndex] + " يسأل " + players[targetIndex] + ".";
+    }
+    
+    document.getElementById("bs-go-to-vote-btn").addEventListener("click", function() {
+      switchScreen("bs-game-screen", "bs-vote-screen");
+      setupVoting();
+    });
+    
+    function setupVoting() {
+      let voteDiv = document.getElementById("bs-vote-options");
+      voteDiv.innerHTML = "";
+      players.forEach((player, index) => {
+        let label = document.createElement("label");
+        let radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = "bs-vote";
+        radio.value = index;
+        label.appendChild(radio);
+        label.appendChild(document.createTextNode(" " + player));
+        voteDiv.appendChild(label);
+        voteDiv.appendChild(document.createElement("br"));
+      });
+    }
+    
+    document.getElementById("bs-vote-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      let voteInput = document.querySelector('input[name="bs-vote"]:checked');
+      if(!voteInput) {
+        alert("الرجاء اختيار لاعب للتصويت.");
+        return;
+      }
+      let votedIndex = parseInt(voteInput.value);
+      switchScreen("bs-vote-screen", "bs-result-screen");
+      document.getElementById("bs-round-number").innerText = round;
+      let resultMsg = "";
+      if(votedIndex === liarIndex) {
+        resultMsg = "تهانينا! لقد كشفتم اللاعب " + players[liarIndex] + " الذي لا يعرف الشيء.";
+        players.forEach((player, idx) => {
+          if(idx !== liarIndex) scoreboard[idx]++;
+        });
+      } else {
+        resultMsg = "خطأ! تم التصويت على " + players[votedIndex] + ". اللاعب الذي لا يعرف الشيء هو " + players[liarIndex] + ".";
+        scoreboard[liarIndex]++;
+      }
+      document.getElementById("bs-result-message").innerText = resultMsg;
+      updateScoreboard();
+      playAnimation();
+    });
+    
+    document.getElementById("bs-next-round-btn").addEventListener("click", function() {
+      round++;
+      liarIndex = Math.floor(Math.random() * numPlayers);
+      console.log("الجولة " + round + " - اللاعب الذي لا يعرف الشيء:", players[liarIndex]);
+      roleIndex = 0;
+      switchScreen("bs-result-screen", "bs-role-screen");
+      document.getElementById("bs-reveal-role-btn").style.display = "inline-block";
+      document.getElementById("bs-next-role-btn").style.display = "none";
+    });
+    
+    document.getElementById("bs-restart-btn").addEventListener("click", function() {
+      location.reload();
+    });
+    
+    function playAnimation() {
+      let animScreen = document.getElementById("bs-animation-screen");
+      let content = document.getElementById("bs-animation-content");
+      animScreen.style.display = "flex";
+      content.innerText = "كشف الهوية";
+      let dots = 0;
+      let interval = setInterval(() => {
+        dots = (dots + 1) % 4;
+        content.innerText = "كشف الهوية" + ".".repeat(dots);
+      }, 500);
+      setTimeout(() => {
+        clearInterval(interval);
+        content.innerText = "اللاعب " + players[liarIndex] + " هو الذي لا يعرف الشيء!";
+        setTimeout(() => {
+          animScreen.style.display = "none";
+        }, 3000);
+      }, 3000);
+    }
+    
+    generateCategoryOptions();
+  </script>
+  
+  <!-- سكربت لعبة XO -->
+  <script>
+    // المتغيرات الأساسية للعبة XO
     let board = ['', '', '', '', '', '', '', '', ''];
     let currentPlayer = 'X';
     let gameActive = true;
@@ -990,10 +2042,8 @@
     function toggleDifficulty() {
       let mode = document.getElementById("modeSelect").value;
       let diffContainer = document.getElementById("difficultyContainer");
-      let onlinePlayersDiv = document.getElementById("onlinePlayers");
-      if(mode === "bot") { diffContainer.style.display = "inline"; onlinePlayersDiv.style.display = "none"; }
-      else if(mode === "online") { diffContainer.style.display = "none"; onlinePlayersDiv.style.display = "block"; updateOnlinePlayers(); }
-      else { diffContainer.style.display = "none"; onlinePlayersDiv.style.display = "none"; }
+      if(mode === "bot") { diffContainer.style.display = "inline"; }
+      else { diffContainer.style.display = "none"; }
     }
     
     function showLostAnimation() {
@@ -1014,28 +2064,6 @@
       setTimeout(() => { drawOverlay.classList.remove("active"); }, 2000);
     }
     
-    function updateOnlinePlayers() {
-      const players = ["أحمد", "سارة", "محمد"];
-      const list = document.getElementById("onlinePlayersList");
-      list.innerHTML = "";
-      players.forEach(player => {
-        let li = document.createElement("li");
-        li.textContent = player;
-        let inviteBtn = document.createElement("button");
-        inviteBtn.textContent = "دعوة";
-        inviteBtn.onclick = function() { sendInvitation(player); };
-        li.appendChild(inviteBtn);
-        list.appendChild(li);
-      });
-    }
-    
-    function sendInvitation(player) {
-      const invitationOverlay = document.getElementById("invitationOverlay");
-      invitationOverlay.textContent = "تم إرسال الدعوة إلى " + player;
-      invitationOverlay.classList.add("active");
-      setTimeout(() => { invitationOverlay.classList.remove("active"); }, 3000);
-    }
-    
     window.addEventListener('load', () => {
       const savedScores = JSON.parse(localStorage.getItem('ticTacToeScores'));
       if(savedScores) {
@@ -1046,567 +2074,6 @@
       }
       renderBoard();
     });
-  </script>
-  
-  <!-- سكربت لعبة UNO -->
-  <script>
-    function initUNO() {
-      document.querySelectorAll('#uno-settings input[name="uno-mode"]').forEach(radio => {
-        radio.addEventListener('change', () => {
-          UNOGame.mode = document.querySelector('input[name="uno-mode"]:checked').value;
-          const botDiff = document.getElementById("uno-bot-difficulty");
-          botDiff.style.display = (UNOGame.mode === "bot") ? "block" : "none";
-        });
-      });
-      document.getElementById("uno-difficulty").addEventListener("change", (e) => {
-        UNOGame.difficulty = e.target.value;
-      });
-      document.getElementById("uno-startGame").addEventListener("click", () => { UNOGame.startGame(); });
-      document.getElementById("draw-card").addEventListener("click", () => {
-        if(UNOGame.isCurrentPlayerHuman()){
-          UNOGame.drawCard(UNOGame.currentPlayer);
-          UNOGame.updateUI();
-        }
-      });
-      document.getElementById("uno-back").addEventListener("click", () => { UNOGame.backToSettings(); });
-    }
-    
-    const UNOGame = {
-      deck: [],
-      players: [[], []],
-      discardPile: [],
-      currentPlayer: 0,
-      mode: "bot",
-      difficulty: "easy",
-      init() { initUNO(); },
-      startGame() {
-        document.getElementById("uno-settings").style.display = "none";
-        document.getElementById("uno-gameArea").style.display = "block";
-        this.deck = this.generateDeck();
-        this.shuffle(this.deck);
-        this.players = [[], []];
-        for(let i = 0; i < 7; i++){
-          this.players[0].push(this.deck.pop());
-          this.players[1].push(this.deck.pop());
-        }
-        let firstCard = this.deck.pop();
-        this.discardPile = [firstCard];
-        this.currentPlayer = 0;
-        this.updateUI();
-        if(!this.isCurrentPlayerHuman()){
-          setTimeout(() => this.botMove(), 1000);
-        }
-      },
-      backToSettings() {
-        document.getElementById("uno-settings").style.display = "block";
-        document.getElementById("uno-gameArea").style.display = "none";
-        this.deck = [];
-        this.players = [[], []];
-        this.discardPile = [];
-        this.currentPlayer = 0;
-      },
-      generateDeck() {
-        const colors = ["red", "blue", "green", "yellow"];
-        const numbers = ["0","1","2","3","4","5","6","7","8","9"];
-        const specials = ["Skip", "Reverse", "+2"];
-        let deck = [];
-        colors.forEach(color => {
-          deck.push({color: color, value: "0"});
-          for(let i = 1; i < numbers.length; i++){
-            deck.push({color: color, value: numbers[i]});
-            deck.push({color: color, value: numbers[i]});
-          }
-          specials.forEach(special => {
-            deck.push({color: color, value: special});
-            deck.push({color: color, value: special});
-          });
-        });
-        return deck;
-      },
-      shuffle(deck) {
-        for (let i = deck.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [deck[i], deck[j]] = [deck[j], deck[i]];
-        }
-      },
-      updateUI() {
-        document.getElementById("deck-count").textContent = this.deck.length;
-        const topCard = this.discardPile[this.discardPile.length - 1];
-        const discardElem = document.getElementById("discard-pile");
-        discardElem.textContent = topCard.value;
-        discardElem.className = "uno-card " + topCard.color;
-        const playerCardsDiv = document.getElementById("player-cards");
-        playerCardsDiv.innerHTML = "";
-        this.players[0].forEach((card, index) => {
-          const cardElem = document.createElement("div");
-          cardElem.className = "uno-card " + card.color;
-          cardElem.textContent = card.value;
-          cardElem.addEventListener("click", () => { if(this.isCurrentPlayerHuman()){ this.playCard(0, index); } });
-          playerCardsDiv.appendChild(cardElem);
-        });
-        const opponentCardsDiv = document.getElementById("opponent-cards");
-        opponentCardsDiv.innerHTML = "";
-        if(this.mode === "bot"){
-          for(let i = 0; i < this.players[1].length; i++){
-            const cardElem = document.createElement("div");
-            cardElem.className = "uno-card";
-            cardElem.style.background = "#555";
-            cardElem.textContent = "?";
-            opponentCardsDiv.appendChild(cardElem);
-          }
-        } else {
-          this.players[1].forEach(card => {
-            const cardElem = document.createElement("div");
-            cardElem.className = "uno-card " + card.color;
-            cardElem.textContent = card.value;
-            cardElem.addEventListener("click", () => { if(!this.isCurrentPlayerHuman()){ this.playCard(1, this.players[1].indexOf(card)); } });
-            opponentCardsDiv.appendChild(cardElem);
-          });
-        }
-      },
-      isCurrentPlayerHuman() {
-        return (this.mode === "bot") ? (this.currentPlayer === 0) : true;
-      },
-      getValidMoves(hand) {
-        const topCard = this.discardPile[this.discardPile.length - 1];
-        return hand.map((card, index) => { return (card.color === topCard.color || card.value === topCard.value) ? index : -1; }).filter(index => index !== -1);
-      },
-      playCard(playerIndex, cardIndex) {
-        const hand = this.players[playerIndex];
-        const card = hand[cardIndex];
-        const topCard = this.discardPile[this.discardPile.length - 1];
-        if(card.color === topCard.color || card.value === topCard.value){
-          hand.splice(cardIndex, 1);
-          this.discardPile.push(card);
-          this.updateUI();
-          if(this.checkWin()) return;
-          this.nextTurn();
-        } else {
-          alert("لا يمكنك لعب هذه البطاقة!");
-        }
-      },
-      drawCard(playerIndex) {
-        if(this.deck.length === 0){
-          const top = this.discardPile.pop();
-          this.deck = this.discardPile;
-          this.shuffle(this.deck);
-          this.discardPile = [top];
-        }
-        const card = this.deck.pop();
-        this.players[playerIndex].push(card);
-      },
-      nextTurn() {
-        this.currentPlayer = (this.currentPlayer === 0) ? 1 : 0;
-        this.updateUI();
-        if(!this.isCurrentPlayerHuman()){
-          setTimeout(() => this.botMove(), 1000);
-        }
-      },
-      botMove() {
-        const hand = this.players[1];
-        const validMoves = this.getValidMoves(hand);
-        if(validMoves.length > 0){
-          let chosenIndex;
-          if(this.difficulty === "easy"){
-            chosenIndex = validMoves[Math.floor(Math.random() * validMoves.length)];
-          } else {
-            let colorCount = {};
-            hand.forEach(card => { colorCount[card.color] = (colorCount[card.color] || 0) + 1; });
-            chosenIndex = validMoves[0];
-            let maxCount = -1;
-            validMoves.forEach(index => {
-              const card = hand[index];
-              if(colorCount[card.color] > maxCount){
-                maxCount = colorCount[card.color];
-                chosenIndex = index;
-              }
-            });
-          }
-          this.playCard(1, chosenIndex);
-        } else {
-          this.drawCard(1);
-          this.updateUI();
-          const newValid = this.getValidMoves(this.players[1]);
-          if(newValid.length > 0){
-            setTimeout(() => this.botMove(), 1000);
-          } else {
-            this.nextTurn();
-          }
-        }
-      },
-      checkWin() {
-        if(this.players[0].length === 0){
-          this.endGame("player");
-          return true;
-        } else if(this.players[1].length === 0){
-          this.endGame("opponent");
-          return true;
-        }
-        return false;
-      },
-      endGame(winner) {
-        let message = "";
-        if(this.mode === "bot"){
-          message = (winner === "player") ? "فزت!" : "خسرت!";
-        } else {
-          message = (winner === "player") ? "فاز اللاعب 1!" : "فاز اللاعب 2!";
-        }
-        const overlay = document.getElementById("resultOverlay");
-        overlay.classList.add("show");
-      },
-      hideResult() { document.getElementById("resultOverlay").classList.remove("show"); }
-    };
-    
-    document.addEventListener('DOMContentLoaded', () => { UNOGame.init(); });
-  </script>
-  
-  <!-- سكربت لعبة Dots & Boxes -->
-  <script>
-    const svgDots = document.querySelector('#dots-boxes #gameBoard');
-    const dotsPlayers = {
-      1: { color: '#e74c3c', score: 0 },
-      2: { color: '#3498db', score: 0 }
-    };
-    let gridSize = 4;
-    let boxSize = 50;
-    let dotsGameMode = 'human';
-    let currentDotsPlayer = 1;
-    let isDragging = false;
-    let startDot = null;
-    const dotsGameState = {
-      dots: [],
-      horizontalLines: [],
-      verticalLines: [],
-      boxes: []
-    };
-    
-    function initDotsGame() {
-      svgDots.innerHTML = '';
-      const size = gridSize * boxSize;
-      svgDots.setAttribute('width', size);
-      svgDots.setAttribute('height', size);
-      for(let i = 0; i < gridSize; i++) {
-        for(let j = 0; j < gridSize; j++) {
-          const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          dot.classList.add('dot');
-          dot.setAttribute('cx', i * boxSize + boxSize/2);
-          dot.setAttribute('cy', j * boxSize + boxSize/2);
-          dot.setAttribute('r', 4);
-          svgDots.appendChild(dot);
-        }
-      }
-      dotsGameState.horizontalLines = Array(gridSize).fill().map(() => Array(gridSize-1).fill(false));
-      dotsGameState.verticalLines = Array(gridSize-1).fill().map(() => Array(gridSize).fill(false));
-      dotsGameState.boxes = Array(gridSize-1).fill().map(() => Array(gridSize-1).fill(0));
-    }
-    
-    function drawLine(x1, y1, x2, y2, color) {
-      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      line.classList.add('line');
-      line.setAttribute('x1', x1);
-      line.setAttribute('y1', y1);
-      line.setAttribute('x2', x2);
-      line.setAttribute('y2', y2);
-      line.setAttribute('stroke', color);
-      svgDots.appendChild(line);
-    }
-    
-    function fillBox(x, y, color) {
-      const box = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-      box.classList.add('box');
-      box.setAttribute('x', x * boxSize + boxSize/2 + 2);
-      box.setAttribute('y', y * boxSize + boxSize/2 + 2);
-      box.setAttribute('width', boxSize - 4);
-      box.setAttribute('height', boxSize - 4);
-      box.setAttribute('fill', color);
-      svgDots.appendChild(box);
-    }
-    
-    function updateCurrentDotsPlayer() {
-      const currentEl = document.querySelector('#dots-boxes .current-player span');
-      currentEl.textContent = currentDotsPlayer;
-      currentEl.style.color = dotsPlayers[currentDotsPlayer].color;
-    }
-    
-    function startGameDots(mode) {
-      dotsGameMode = mode;
-      dotsPlayers[1].color = document.getElementById('player1Color').value;
-      dotsPlayers[2].color = document.getElementById('player2Color').value;
-      currentDotsPlayer = 1;
-      initDotsGame();
-      updateCurrentDotsPlayer();
-    }
-    
-    svgDots.addEventListener('mousedown', e => {
-      const rect = svgDots.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      startDot = { x: Math.floor(x / boxSize), y: Math.floor(y / boxSize) };
-      isDragging = true;
-    });
-    
-    svgDots.addEventListener('mouseup', e => {
-      if (!isDragging) return;
-      isDragging = false;
-      const rect = svgDots.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const endDot = { x: Math.floor(x / boxSize), y: Math.floor(y / boxSize) };
-      if (startDot.x === endDot.x && Math.abs(startDot.y - endDot.y) === 1) {
-        const xCoord = startDot.x * boxSize + boxSize/2;
-        const yCoord1 = Math.min(startDot.y, endDot.y) * boxSize + boxSize/2;
-        const yCoord2 = Math.max(startDot.y, endDot.y) * boxSize + boxSize/2;
-        drawLine(xCoord, yCoord1, xCoord, yCoord2, dotsPlayers[currentDotsPlayer].color);
-      } else if (startDot.y === endDot.y && Math.abs(startDot.x - endDot.x) === 1) {
-        const yCoord = startDot.y * boxSize + boxSize/2;
-        const xCoord1 = Math.min(startDot.x, endDot.x) * boxSize + boxSize/2;
-        const xCoord2 = Math.max(startDot.x, endDot.x) * boxSize + boxSize/2;
-        drawLine(xCoord1, yCoord, xCoord2, yCoord, dotsPlayers[currentDotsPlayer].color);
-      }
-    });
-  </script>
-  
-  <!-- سكربت لعبة "برا السالفة" -->
-  <script>
-    // المتغيرات الأساسية للعبة برا السالفة
-    let numPlayers, chosenItem, liarIndex;
-    let currentTurn = 0;
-    let players = [];
-    let roleIndex = 0;
-    let round = 1;
-    let scoreboard = [];
-    
-    const categories = {
-      "سيارات": ["تويوتا", "هوندا", "مرسيدس", "بي إم دبليو", "فورد", "شيفروليه", "نيسان", "لكزس", "أودي", "بورش", "لامبورغيني", "فيراري", "ميتسوبيشي", "سوبارو"],
-      "حيوانات": ["أسد", "فيل", "نمر", "زرافة", "دب", "قرد", "نمس", "ثعلب", "ذئب", "فهد", "غزال", "أرنب", "جمل", "بطريق"],
-      "أكلات عربية": ["كبسة", "منسف", "مقلوبة", "مسخن", "مجدرة", "فتة", "حمص", "تبولة", "فتوش", "شاورما", "مشاوي", "مندي", "مرق", "مطبقة"],
-      "كورة": ["ليونيل ميسي", "كريستيانو رونالدو", "نيمار جونيور", "محمد صلاح", "كيليان مبابي", "أنطوان غريزمان", "لوكا مودريتش", "كيفين دي بروين", "سيرجيو أجويرو"],
-      "فواكه": ["تفاح", "موز", "برتقال", "عنب", "كيوي", "أناناس", "مانجو", "فراولة", "بطيخ", "شمام", "رمان", "خوخ", "أفوكادو"],
-      "شخصيات كرتون في سبيستون": ["مغامر", "سوبر بطل", "فهد", "أمجد", "راشد", "سلمان", "عمرو", "أيمن"],
-      "ألعاب": ["شطرنج", "طاولة", "بلياردو", "كرة السلة", "كرة القدم", "تنس", "هوكي", "بوكيمون", "ماريو", "فيفا", "أساسنز كريد", "ماينكرافت"],
-      "أنمي": ["ناروتو", "ون بيس", "دراجون بول", "هجوم العمالقة", "هايكيو", "بليتش", "المحقق كونان", "كود غياس", "ديث نوت", "فول ميتال اليس"]
-    };
-    
-    const categoryIcons = {
-      "سيارات": "fa-car",
-      "حيوانات": "fa-paw",
-      "أكلات عربية": "fa-utensils",
-      "كورة": "fa-futbol",
-      "فواكه": "fa-apple-alt",
-      "شخصيات كرتون في سبيستون": "fa-tv",
-      "ألعاب": "fa-gamepad",
-      "أنمي": "fa-film"
-    };
-    
-    function updateScoreboard() {
-      let boardContent = document.getElementById("bs-score-content");
-      let html = "<strong>النتائج:</strong><br>";
-      players.forEach((name, index) => {
-        html += `${name}: ${scoreboard[index] || 0} نقطة<br>`;
-      });
-      boardContent.innerHTML = html;
-    }
-    
-    function switchScreen(fromId, toId) {
-      document.getElementById(fromId).classList.remove("active");
-      document.getElementById(toId).classList.add("active");
-    }
-    
-    function generateCategoryOptions() {
-      const container = document.getElementById("bs-category-options");
-      container.innerHTML = "";
-      for (let cat in categories) {
-        let div = document.createElement("div");
-        div.classList.add("category-option");
-        div.setAttribute("data-category", cat);
-        let icon = document.createElement("i");
-        icon.classList.add("fas", categoryIcons[cat]);
-        div.appendChild(icon);
-        let span = document.createElement("span");
-        span.innerText = cat;
-        div.appendChild(span);
-        div.addEventListener("click", function() {
-          let items = categories[cat];
-          let randomIndex = Math.floor(Math.random() * items.length);
-          chosenItem = items[randomIndex];
-          console.log("الفئة:", cat, "العنصر المختار:", chosenItem);
-          switchScreen("bs-category-screen", "bs-setup-screen");
-        });
-        container.appendChild(div);
-      }
-    }
-    
-    document.getElementById("bs-setup-form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      numPlayers = parseInt(document.getElementById("bs-numPlayers").value);
-      switchScreen("bs-setup-screen", "bs-names-screen");
-      generateNameInputs();
-    });
-    
-    function generateNameInputs() {
-      const container = document.getElementById("bs-names-container");
-      container.innerHTML = "";
-      for(let i = 0; i < numPlayers; i++){
-        let div = document.createElement("div");
-        let label = document.createElement("label");
-        label.innerText = "اسم اللاعب " + (i + 1) + ":";
-        let input = document.createElement("input");
-        input.type = "text";
-        input.required = true;
-        input.id = "bs-playerName" + i;
-        div.appendChild(label);
-        div.appendChild(input);
-        container.appendChild(div);
-      }
-    }
-    
-    document.getElementById("bs-names-form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      players = [];
-      scoreboard = [];
-      for(let i = 0; i < numPlayers; i++){
-        let name = document.getElementById("bs-playerName" + i).value.trim();
-        if(name === ""){
-          alert("الرجاء إدخال جميع أسماء اللاعبين.");
-          return;
-        }
-        players.push(name);
-        scoreboard.push(0);
-      }
-      updateScoreboard();
-      liarIndex = Math.floor(Math.random() * numPlayers);
-      console.log("اللاعب الذي لا يعرف الشيء:", players[liarIndex]);
-      switchScreen("bs-names-screen", "bs-role-screen");
-      roleIndex = 0;
-      updateRoleScreen();
-    });
-    
-    // تعديل حدث زر العودة ليعيد عرض شاشة اختيار الفئة عند النقر عليه
-    document.getElementById("bs-back-to-category").addEventListener("click", function() {
-      document.querySelectorAll("#bra-salfa .screen").forEach(screen => screen.classList.remove("active"));
-      document.getElementById("bs-category-screen").classList.add("active");
-    });
-    
-    function updateRoleScreen() {
-      if(roleIndex >= players.length) {
-        switchScreen("bs-role-screen", "bs-game-screen");
-        currentTurn = 0;
-        updateTurnInfo();
-        return;
-      }
-      document.getElementById("bs-role-player-name").innerText = "دور اللاعب: " + players[roleIndex];
-      document.getElementById("bs-role-message").innerHTML = "اضغط الزر لعرض الدور<br>(يرجى عدم النظر للاعبين الآخرين)";
-      document.getElementById("bs-reveal-role-btn").style.display = "inline-block";
-      document.getElementById("bs-next-role-btn").style.display = "none";
-    }
-    
-    document.getElementById("bs-reveal-role-btn").addEventListener("click", function() {
-      let messageElem = document.getElementById("bs-role-message");
-      if(roleIndex === liarIndex) {
-        messageElem.innerText = "حاول معرفت الشيء";
-      } else {
-        messageElem.innerText = "الشيء هو: " + chosenItem;
-      }
-      document.getElementById("bs-reveal-role-btn").style.display = "none";
-      document.getElementById("bs-next-role-btn").style.display = "inline-block";
-    });
-    
-    document.getElementById("bs-next-role-btn").addEventListener("click", function() {
-      roleIndex++;
-      updateRoleScreen();
-    });
-    
-    function updateTurnInfo() {
-      let askerIndex = currentTurn % numPlayers;
-      let targetIndex = (currentTurn + 1) % numPlayers;
-      document.getElementById("bs-turn-info").innerText = players[askerIndex] + " يسأل " + players[targetIndex] + ".";
-    }
-    
-    document.getElementById("bs-next-turn-btn").addEventListener("click", function() {
-      currentTurn++;
-      updateTurnInfo();
-    });
-    
-    document.getElementById("bs-go-to-vote-btn").addEventListener("click", function() {
-      switchScreen("bs-game-screen", "bs-vote-screen");
-      setupVoting();
-    });
-    
-    function setupVoting() {
-      let voteDiv = document.getElementById("bs-vote-options");
-      voteDiv.innerHTML = "";
-      players.forEach((player, index) => {
-        let label = document.createElement("label");
-        let radio = document.createElement("input");
-        radio.type = "radio";
-        radio.name = "bs-vote";
-        radio.value = index;
-        label.appendChild(radio);
-        label.appendChild(document.createTextNode(" " + player));
-        voteDiv.appendChild(label);
-        voteDiv.appendChild(document.createElement("br"));
-      });
-    }
-    
-    document.getElementById("bs-vote-form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      let voteInput = document.querySelector('input[name="bs-vote"]:checked');
-      if(!voteInput) {
-        alert("الرجاء اختيار لاعب للتصويت.");
-        return;
-      }
-      let votedIndex = parseInt(voteInput.value);
-      switchScreen("bs-vote-screen", "bs-result-screen");
-      document.getElementById("bs-round-number").innerText = round;
-      let resultMsg = "";
-      if(votedIndex === liarIndex) {
-        resultMsg = "تهانينا! لقد كشفتم اللاعب " + players[liarIndex] + " الذي لا يعرف الشيء.";
-        players.forEach((player, idx) => {
-          if(idx !== liarIndex) scoreboard[idx]++;
-        });
-      } else {
-        resultMsg = "خطأ! تم التصويت على " + players[votedIndex] + ". اللاعب الذي لا يعرف الشيء هو " + players[liarIndex] + ".";
-        scoreboard[liarIndex]++;
-      }
-      document.getElementById("bs-result-message").innerText = resultMsg;
-      updateScoreboard();
-      playAnimation();
-    });
-    
-    document.getElementById("bs-next-round-btn").addEventListener("click", function() {
-      round++;
-      liarIndex = Math.floor(Math.random() * numPlayers);
-      console.log("الجولة " + round + " - اللاعب الذي لا يعرف الشيء:", players[liarIndex]);
-      roleIndex = 0;
-      switchScreen("bs-result-screen", "bs-role-screen");
-      document.getElementById("bs-reveal-role-btn").style.display = "inline-block";
-      document.getElementById("bs-next-role-btn").style.display = "none";
-    });
-    
-    document.getElementById("bs-restart-btn").addEventListener("click", function() {
-      location.reload();
-    });
-    
-    function playAnimation() {
-      let animScreen = document.getElementById("bs-animation-screen");
-      let content = document.getElementById("bs-animation-content");
-      animScreen.style.display = "flex";
-      content.innerText = "كشف الهوية";
-      let dots = 0;
-      let interval = setInterval(() => {
-        dots = (dots + 1) % 4;
-        content.innerText = "كشف الهوية" + ".".repeat(dots);
-      }, 500);
-      setTimeout(() => {
-        clearInterval(interval);
-        content.innerText = "اللاعب " + players[liarIndex] + " هو الذي لا يعرف الشيء!";
-        setTimeout(() => {
-          animScreen.style.display = "none";
-        }, 3000);
-      }, 3000);
-    }
-    
-    generateCategoryOptions();
   </script>
 </body>
 </html>
